@@ -1,1 +1,1 @@
-# react-practice
+# Fullstack Open react course
