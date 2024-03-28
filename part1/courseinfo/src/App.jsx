@@ -5,26 +5,35 @@ import Total from "./components/Total"
 
 
 function App() {
-  const course = 'Half Stack application development'
-  const parts = {
-    part1: 'Fundamentals of React',
-    part2: 'Using props to pass data',
-    part3: 'State of a component'
-  }
-  const exercises = {
-    exercises1: 10,
-    exercises2: 7,
-    exercises3: 14
+
+  const course = {
+    name: 'Half Stack application development',
+    parts: [
+      {
+        name: 'Fundamentals of React',
+        exercises: 10
+      },
+      {
+        name: 'Using props to pass data',
+        exercises: 7
+      },
+      {
+        name: 'State of a component',
+        exercises: 14
+      }
+    ]
   }
 
+
+  
 
  
 
   return (
     <>
       <Header course={course} />
-      <Content parts={parts} exercises={exercises} />
-      <Total exercises={exercises} />
+      <Content course={course} />
+      <Total course={course} />
     </>
 
   )
