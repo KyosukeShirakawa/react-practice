@@ -3,6 +3,7 @@ import personServices from './services/persons'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchName, setSearchName] = useState('')
+  const [operationMessage, setOperationMessage] = useState(null)
+  const [isSuccess, setIsSuccess] = useState(true)
 
   useEffect(() => {
     personServices
@@ -55,14 +58,19 @@ const App = () => {
       setNewNumber('')
       return
     }
-
-  
     personServices
       .create(personObject)
       .then(returendPerson => {
         setPersons(persons.concat(returendPerson))
         setNewName('')
         setNewNumber('')
+        setIsSuccess(true)
+        setOperationMessage(
+          `Person '${returendPerson.name}' was successfully added to the phonebook`
+        )
+        setTimeout(() => {
+          setOperationMessage(null)
+        }, 5000)
       })
   }
 
@@ -74,6 +82,23 @@ const App = () => {
       .update(id, changedPerson)
       .then(returendPerson => {
         setPersons(persons.map(person => person.id !== id ? person : returendPerson))
+
+        setIsSuccess(true)
+        setOperationMessage(
+          `${returendPerson.name}'s phone number was successfully updated`
+        )
+        setTimeout(() => {
+          setOperationMessage(null)
+        }, 5000)
+      })
+      .catch(error => {
+        setIsSuccess(false)
+        setOperationMessage(
+          `Person '${person.name}' was already removed from server`
+        )
+        setTimeout(() => {
+          setOperationMessage(null)
+        }, 5000)
       })
 
   }
@@ -83,10 +108,19 @@ const App = () => {
     if(window.confirm(`Delete ${personToDelete.name}?`)){
       personServices
       .deletePerson(personToDelete)
-      .then(response => {
-        setPersons(persons.filter(person => person.id !== response.id ))
+      .then(returendPerson => {
+        setPersons(persons.filter(person => person.id !== returendPerson.id ))
 
-      }) 
+      })
+      .catch(error => {
+        setIsSuccess(false)
+        setOperationMessage(
+          `Person '${personToDelete.name} was already removed from server`
+        )
+        setTimeout(() => {
+          setOperationMessage(null)
+        }, 5000)
+      })
       
     }
     
@@ -99,8 +133,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={operationMessage} isSuccess={isSuccess} />
       <Filter text='filter shown with' handleSearchName={handleSearchName}/>
-  
 
 
       <h2>Add a new</h2>
