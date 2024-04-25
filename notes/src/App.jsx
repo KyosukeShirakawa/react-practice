@@ -16,7 +16,7 @@ const App = () => {
       .then(initalNotes => {
         setNotes(initalNotes)
       })
-  }, [])
+  }, [notes])
 
   const addNote = (event) => {
     event.preventDefault()
@@ -37,9 +37,13 @@ const App = () => {
     setNewNote(event.target.value)
   }
 
-  const notesToShow = showAll
-    ? notes
+  
+  const notesToShow = showAll 
+    ? notes 
     : notes.filter(note => note.important)
+
+  console.log(notesToShow)
+  
 
 
   const toggleImportanceOf = id => {
@@ -77,7 +81,7 @@ const App = () => {
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
         </button>
-      </div>      
+      </div>      c
       <ul>
         {notesToShow.map(note => 
           <Note 
